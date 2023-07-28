@@ -1,0 +1,544 @@
+<html>
+    <head></head>
+    <body>
+        <img src="logo.svg" class="logo">
+        <div class="sync-buttons">
+            <select name="pickup-type" id="pickup-type" class="dropdown" onchange="changePickupType()">
+                <option value=0>Fluence</option>
+                <option value=1>Passive</option>
+            </select>
+            <button class="sync-button" onclick="load()">LOAD</button>
+            <button class="sync-button" onclick="save()">SAVE</button>
+        </div>
+        <h1>
+            PICKUP CONFIGURATOR
+        </h1>
+        <div class="preset-select-container">
+            <p>bridge</p>
+            <button class="preset-select selected" id="preset-select-0" onclick="presetselect(0)">1</button>
+            <button class="preset-select" id="preset-select-1" onclick="presetselect(1)">2</button>
+            <button class="preset-select" id="preset-select-2" onclick="presetselect(2)">3</button>
+            <button class="preset-select" id="preset-select-3" onclick="presetselect(3)">4</button>
+            <button class="preset-select" id="preset-select-4" onclick="presetselect(4)">5</button>
+            <p>neck</p>
+        </div>
+
+        <!-- FLUENCE PICKUPS -->
+        <div id="fluent-pickup-container" class="fluent-pickup-container">
+            <div class="pickup-body-outline">
+                <div class="fluent-outline">
+                    <select name="neck-voice" id="neck-voice" class="fluent-dropdown" onchange="changeVoicing()">
+                        <option value="0">Neck Voice 1</option>
+                        <option value="1">Neck Voice 2</option>
+                        <option value="2">Neck Voice 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pickup-seperator"></div>
+            <div class="pickup-body-outline">
+                <div class="fluent-outline">
+                    <select name="bridge-voice" id="bridge-voice" class="fluent-dropdown" onchange="changeVoicing()">
+                        <option value="0">Bridge Voice 1</option>
+                        <option value="1">Bridge Voice 2</option>
+                        <option value="2">Bridge Voice 3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASSIVE PICKUPS -->
+        <div id="passive-pickup-container" class="passive-pickup-container">
+            <div class="pickup-body-outline">
+                <p>NECK</p>
+                <div>
+                    <div class="pickup-outline selected" id="pickup-1" onclick=clickPickup(0)>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                    </div>
+                    <div class="pickup-outline selected" id="pickup-2" onclick=clickPickup(1)>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                    </div>
+                </div>
+                <div class="phase" id="phase-0" onclick=clickPhase(0)></div>
+            </div>
+            <div class="pickup-seperator"></div>
+            <div class="pickup-body-outline">
+                <p>BRIDGE</p>
+                <div>
+                    <div class="pickup-outline selected" id="pickup-3" onclick=clickPickup(2)>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                    </div>
+                    <div class="pickup-outline selected" id="pickup-4" onclick=clickPickup(3)>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                        <div class="magnet"></div><div class="magnet"></div><div class="magnet"></div>
+                    </div>
+                </div>
+                <div class="phase" id="phase-1" onclick=clickPhase(1)></div>
+            </div>
+        </div>
+
+
+        </div>
+    </body>
+    <style>
+        body {
+            background-color: lightgray;
+        }
+
+        h1 {
+            width: 100%;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .passive-pickup-container {
+            display: none;
+        }
+
+        .pickup-seperator{
+            height:40px
+        }
+
+        .dropdown {
+            height: 40px;
+            width: 120px;
+            padding:10px;
+            border-radius: 10px;
+            border: 2px solid grey;
+            background-color: lightgray;
+            outline: none
+        }
+
+        .fluent-dropdown {
+            height: 40px;
+            width: 160px;
+            padding:10px;
+            border-radius: 10px;
+            border: 2px solid grey;
+            background-color: lightgray;
+            outline: none
+        }
+
+        .phase {
+            width: 40px;
+            height:40px;
+            border-radius: 24px;
+            background-color: black;
+            margin-left: 40px;
+            cursor: pointer;
+            border: 4px solid black;
+        }
+
+        .magnet {
+            width: 40px;
+            height:40px;
+            border-radius: 20px;
+            background-color: black;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pickup-outline {
+            width: 500px;
+            height: 90px;
+            border: 6px solid black;
+            background-color: white;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding-left: 20px;
+            padding-right: 20px;
+            margin-left:40px;
+            cursor: pointer;
+        }
+
+        .pickup-body-outline {
+            margin-top: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fluent-outline {
+            width: 500px;
+            height: 200px;
+            background-color: #E8E8E8;
+            border: 6px solid black;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding-left: 20px;
+            padding-right: 20px;
+            cursor: pointer;
+        }
+        
+        .logo {
+            display: inline;
+            width: 120px;
+            position: absolute;
+            top: 10px;
+            left: 10px
+        }
+        
+        .sync-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .sync-button {
+            height: 40px;
+            width: 120px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            margin-top: 10px;
+        }
+        .sync-button:hover {
+            background-color: lightgray;
+        }
+
+        .preset-select-container {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            margin-bottom: 60px;
+        }
+
+        .preset-select {
+            width: 50px;
+            height: 50px;
+            margin-inline: 10px;
+            border: 1px solid black;
+            border-radius: 10px;
+            background-color: lightgrey;
+            cursor: pointer;
+        }
+
+        .preset-select:hover {
+            background-color: #42d4f5;
+        }
+
+        .selected {
+            background-color: #42d4f5;
+        }
+    </style>
+
+    <script>
+
+const MANUFACTURER_ID_1 = 0x00
+const MANUFACTURER_ID_2 = 0x21
+const MANUFACTURER_ID_3 = 0x75 // 117, ascii value for "u" for ultrapalace, should be between 0x60 and 0x7F for sysex spec
+
+const SYSEX_TYPE_CONFIG =  0x00
+const SYSEX_TYPE_ACK =  0x01
+const SYSEX_TYPE_REQUEST_CONFIG =  0x02
+
+var midiAccess;
+var midiOutput;
+var midiConnection;
+
+var selectedPreset = 0;
+var pickupType = 0;
+
+var fluentConfig = [
+    {
+        neck: 0,
+        bridge: 0
+    },
+    {
+        neck: 0,
+        bridge: 0
+    },
+    {
+        neck: 0,
+        bridge: 0
+    },
+    {
+        neck: 0,
+        bridge: 0
+    },
+    {
+        neck: 0,
+        bridge: 0
+    },
+]
+
+var passiveConfig = [
+    // NECKONLY
+    {
+        neckOn: true,
+        bridgeOn: false,
+        neckSplit: false,
+        bridgeSplit: false,
+        neckInPhase: true,
+        bridgeInPhase: true
+    },
+    // BRIDGEONLY
+    {
+        neckOn: false,
+        bridgeOn: true,
+        neckSplit: false,
+        bridgeSplit: false,
+        neckInPhase: true,
+        bridgeInPhase: true
+    },
+    // NECKANDBRIDGE
+    {
+        neckOn: true,
+        bridgeOn: true,
+        neckSplit: false,
+        bridgeSplit: false,
+        neckInPhase: true,
+        bridgeInPhase: true
+    },
+    // NECKSPLIT
+    {
+        neckOn: true,
+        bridgeOn: false,
+        neckSplit: true,
+        bridgeSplit: false,
+        neckInPhase: true,
+        bridgeInPhase: true
+    },
+    // BRIDGESPLIT
+    {
+        neckOn: false,
+        bridgeOn: true,
+        neckSplit: false,
+        bridgeSplit: true,
+        neckInPhase: true,
+        bridgeInPhase: true
+    },
+]
+
+var configArray;
+
+const changePickupType = () => {
+    pickupType = document.getElementById("pickup-type").value
+    refresh()
+}
+
+const changeVoicing = () => {
+    fluentConfig[selectedPreset].neck = document.getElementById("neck-voice").value
+    fluentConfig[selectedPreset].bridge = document.getElementById("bridge-voice").value
+}
+
+const presetselect = x => {
+    for(let i of [0, 1, 2, 3, 4]){
+        document.getElementById("preset-select-" + i).classList.remove("selected")
+    }
+    document.getElementById("preset-select-" + x ).classList.add("selected")
+    selectedPreset = x
+    refresh()
+}
+
+const sync=()=>{
+    // initWebMidi()
+}
+
+const run=()=>{
+    console.log("run")
+    refresh()
+    buildMessageFromConfig()
+    initWebMidi()
+}
+
+const setConfigFromArray = arr => {
+    for(let i=0; i<5; i++){
+        passiveConfig[i].neckOn        = arr[i] & 0x1
+        passiveConfig[i].bridgeOn      = (arr[i] >> 1) & 0x1
+        passiveConfig[i].neckSplit     = (arr[i] >> 2) & 0x1
+        passiveConfig[i].bridgeSplit   = (arr[i] >> 3) & 0x1
+        passiveConfig[i].neckInPhase   = (arr[i] >> 4) & 0x1
+        passiveConfig[i].bridgeInPhase = (arr[i] >> 5) & 0x1
+    }
+}
+
+const onMIDIMessage = ( event )=> {
+    var str = "MIDI message received at timestamp " + event.timeStamp + "[" + event.data.length + " bytes]: ";
+    for (var i=0; i<event.data.length; i++) {
+        str += "0x" + event.data[i].toString(16) + " ";
+    }
+    console.log( str );
+
+    const [ head, id1, id2, id3, type, ...data] = event.data
+    if(
+        (id1 != MANUFACTURER_ID_1) ||
+        (id2 != MANUFACTURER_ID_2) ||
+        (id3 != MANUFACTURER_ID_3)
+    ){
+        return console.log("got sysex from a different device")
+    }
+    if(type == SYSEX_TYPE_CONFIG){
+        const len = data.length
+        data.length = len - 1 // remove the last byte
+        console.log("received config " + JSON.stringify(data))
+        setConfigFromArray(data)
+        refresh()
+    } else if(type == SYSEX_TYPE_ACK) {
+        console.log("got SYSEX ACK")
+    } else {
+        console.log("got unknown sysex type")
+    }
+}
+
+const sendConfigSysex = ()=>{
+    buildMessageFromConfig()
+    if(midiConnection != "open")return alert("no Pickup connected")
+    midiOutput.send([
+        0xf0, 
+        MANUFACTURER_ID_1, 
+        MANUFACTURER_ID_2, 
+        MANUFACTURER_ID_3, 
+        SYSEX_TYPE_CONFIG,
+        ...configArray,
+        0xf7
+    ])
+}
+
+const sendSysexRequest = ()=>{
+    if(midiConnection != "open")return alert("no Pickup connected")
+
+    console.log("sending sysex request")
+    midiOutput.send([
+        0xF0, 
+        MANUFACTURER_ID_1, 
+        MANUFACTURER_ID_2, 
+        MANUFACTURER_ID_3, 
+        SYSEX_TYPE_REQUEST_CONFIG,
+        0xF7
+    ])
+}
+
+const onMIDISuccess = ( midi ) => {
+    console.log( "MIDI ready!" );
+    midiAccess = midi;
+    for (var entry of midi.outputs) {
+        var output = entry[1];
+        console.log( "Output port [type:'" + output.type + "'] id:'" + output.id + "' manufacturer:'" + output.manufacturer + "' name:'" + output.name + "' version:'" + output.version + "'" );
+        if(output.name == "MIDI2CVBOY"){
+        // if(output.name == "Seeeduino XIAO"){
+            console.log("found Pickup output, connecting")
+            midiOutput = output
+        }
+    }
+    for (var entry of midi.inputs) {
+        var input = entry[1];
+        console.log( "Input port [type:'" + input.type + "'] id:'" + input.id + "' manufacturer:'" + input.manufacturer + "' name:'" + input.name + "' version:'" + input.version + "'" );
+        if(input.name == "MIDI2CVBOY"){
+        // if(entry.name == "Seeeduino XIAO"){
+            console.log("found Pickup input, connecting")
+            input.onmidimessage = onMIDIMessage
+            input.onstatechange = ({ port }) => {
+                console.log("usb port state change: " + port.connection)
+                midiConnection = port.connection
+                if(port.connection == "open"){
+                    sendSysexRequest()
+                }
+            }
+        }
+    }
+}
+
+const onMIDIFailure = ( msg ) => {
+    console.log( "Failed to get MIDI access - " + msg );
+}
+
+const initWebMidi = async () => {
+    if(!navigator.requestMIDIAccess){
+        console.log("MIDI Access forbidden - see WVR documentation to enable Web MIDI")
+        return
+    }
+    try{
+        navigator.requestMIDIAccess({sysex:true}).then( onMIDISuccess, onMIDIFailure )
+    } catch (e){
+        console.log("requestMIDIaccess Error " + e)
+    }
+}
+
+const SB = (val, bit) => val | (1 << bit)
+
+const buildMessageFromConfig = () => {
+    let newConfigArray = []
+    for(let con of passiveConfig){
+        var val = 0x00
+        val = con.neckOn        ? SB(val, 0) : val
+        val = con.bridgeOn      ? SB(val, 1) : val
+        val = con.neckSplit     ? SB(val, 2) : val
+        val = con.bridgeSplit   ? SB(val, 3) : val
+        val = con.neckInPhase   ? SB(val, 4) : val
+        val = con.bridgeInPhase ? SB(val, 5) : val
+        newConfigArray.push(val)
+    }
+    configArray = newConfigArray
+    console.log(configArray)
+}
+
+const refresh = () => {
+    let el
+
+    el = document.getElementById("fluent-pickup-container")
+    el.style.display = pickupType == 0 ? "block" : "none"
+    el = document.getElementById("passive-pickup-container")
+    el.style.display = pickupType == 1 ? "block" : "none"
+
+    // passive pickups
+    el = document.getElementById("pickup-1")
+    passiveConfig[selectedPreset].neckOn ? el.classList.add("selected") : el.classList.remove("selected")
+    el = document.getElementById("pickup-2")
+    !passiveConfig[selectedPreset].neckSplit && passiveConfig[selectedPreset].neckOn ? el.classList.add("selected") : el.classList.remove("selected")
+    el = document.getElementById("pickup-3")
+    passiveConfig[selectedPreset].bridgeOn ? el.classList.add("selected") : el.classList.remove("selected")
+    el = document.getElementById("pickup-4")
+    !passiveConfig[selectedPreset].bridgeSplit && passiveConfig[selectedPreset].bridgeOn ? el.classList.add("selected") : el.classList.remove("selected")
+    
+    // fluent pickups
+    el = document.getElementById("neck-voice")
+    el.value = fluentConfig[selectedPreset].neck
+    el = document.getElementById("bridge-voice")
+    el.value = fluentConfig[selectedPreset].bridge
+
+    // phases
+    el = document.getElementById("phase-0")
+    !passiveConfig[selectedPreset].neckInPhase ? el.classList.add("selected") : el.classList.remove("selected")    
+    el = document.getElementById("phase-1")
+    !passiveConfig[selectedPreset].bridgeInPhase ? el.classList.add("selected") : el.classList.remove("selected")    
+}
+
+const load = () => {
+    sendSysexRequest()
+}
+
+const save = () => {
+    sendConfigSysex()
+}
+
+const configFields = [
+    "neckOn",
+    "neckSplit",
+    "bridgeOn",
+    "bridgeSplit",
+]
+
+const clickPickup = x => {
+    passiveConfig[selectedPreset][configFields[x]] = !passiveConfig[selectedPreset][configFields[x]]
+    refresh()
+}
+
+const clickPhase = x => {
+    passiveConfig[selectedPreset][x == 1 ? "bridgeInPhase" : "neckInPhase"] = !passiveConfig[selectedPreset][x == 1 ? "bridgeInPhase" : "neckInPhase"]
+    refresh()
+}
+
+// window.onload=run
+
+    </script>
+</html>
