@@ -317,7 +317,7 @@ var midiConnection;
 var selectedPreset = 0;
 var pickupType = 0;
 
-var fluentConfig = [
+var fluenceConfig = [
     {
         neck: 1,
         bridge: 1
@@ -349,8 +349,8 @@ var passiveConfig = [
         bridgeSplit: false,
         neckInPhase: true,
         bridgeInPhase: true,
-        neckInParellel: true,
-        bridgeInParellel: true,
+        neckInParallel: true,
+        bridgeInParallel: true,
     },
     // BRIDGEONLY
     {
@@ -360,8 +360,8 @@ var passiveConfig = [
         bridgeSplit: false,
         neckInPhase: true,
         bridgeInPhase: true,
-        neckInParellel: true,
-        bridgeInParellel: true,
+        neckInParallel: true,
+        bridgeInParallel: true,
     },
     // NECKANDBRIDGE
     {
@@ -371,8 +371,8 @@ var passiveConfig = [
         bridgeSplit: false,
         neckInPhase: true,
         bridgeInPhase: true,
-        neckInParellel: true,
-        bridgeInParellel: true,
+        neckInParallel: true,
+        bridgeInParallel: true,
     },
     // NECKSPLIT
     {
@@ -382,8 +382,8 @@ var passiveConfig = [
         bridgeSplit: false,
         neckInPhase: true,
         bridgeInPhase: true,
-        neckInParellel: true,
-        bridgeInParellel: true,
+        neckInParallel: true,
+        bridgeInParallel: true,
     },
     // BRIDGESPLIT
     {
@@ -393,8 +393,8 @@ var passiveConfig = [
         bridgeSplit: true,
         neckInPhase: true,
         bridgeInPhase: true,
-        neckInParellel: true,
-        bridgeInParellel: true,
+        neckInParallel: true,
+        bridgeInParallel: true,
     },
 ]
 
@@ -406,8 +406,8 @@ const changePickupType = () => {
 }
 
 const changeVoicing = () => {
-    fluentConfig[selectedPreset].neck = document.getElementById("neck-voice").value
-    fluentConfig[selectedPreset].bridge = document.getElementById("bridge-voice").value
+    fluenceConfig[selectedPreset].neck = document.getElementById("neck-voice").value
+    fluenceConfig[selectedPreset].bridge = document.getElementById("bridge-voice").value
 }
 
 const presetselect = x => {
@@ -431,15 +431,20 @@ const run=()=>{
 }
 
 const setConfigFromArray = arr => {
+    pickupType = arr[0] == 1 ? 0 : 1;
+    var idx = 1
     for(let i=0; i<5; i++){
-        passiveConfig[i].neckOn           = arr[i] & 0x1
-        passiveConfig[i].bridgeOn         = (arr[i] >> 1) & 0x1
-        passiveConfig[i].neckSplit        = (arr[i] >> 2) & 0x1
-        passiveConfig[i].bridgeSplit      = (arr[i] >> 3) & 0x1
-        passiveConfig[i].neckInPhase      = (arr[i] >> 4) & 0x1
-        passiveConfig[i].bridgeInPhase    = (arr[i] >> 5) & 0x1
-        passiveConfig[i].bridgeInParellel = (arr[i] >> 6) & 0x1
-        passiveConfig[i].neckInParellel   = (arr[i] >> 7) & 0x1
+        passiveConfig[i].neckOn           = arr[idx++];
+        passiveConfig[i].bridgeOn         = arr[idx++];
+        passiveConfig[i].neckSplit        = arr[idx++];
+        passiveConfig[i].bridgeSplit      = arr[idx++];
+        passiveConfig[i].neckInPhase      = arr[idx++];
+        passiveConfig[i].bridgeInPhase    = arr[idx++];
+        passiveConfig[i].bridgeInParallel = arr[idx++];
+        passiveConfig[i].neckInParallel   = arr[idx++];
+        
+        fluenceConfig[i].neck             = arr[idx++];
+        fluenceConfig[i].bridge           = arr[idx++];
     }
 }
 
@@ -502,6 +507,7 @@ const sendSysexRequest = ()=>{
 const onMIDISuccess = ( midi ) => {
     console.log( "MIDI ready!" );
     midiAccess = midi;
+    console.log(midi.outputs)
     for (var entry of midi.outputs) {
         var output = entry[1];
         console.log( "Output port [type:'" + output.type + "'] id:'" + output.id + "' manufacturer:'" + output.manufacturer + "' name:'" + output.name + "' version:'" + output.version + "'" );
@@ -556,18 +562,37 @@ const SB = (val, bit) => val | (1 << bit)
 
 const buildMessageFromConfig = () => {
     let newConfigArray = []
-    for(let con of passiveConfig){
-        var val = 0x00
-        val = con.neckOn           ? SB(val, 0) : val
-        val = con.bridgeOn         ? SB(val, 1) : val
-        val = con.neckSplit        ? SB(val, 2) : val
-        val = con.bridgeSplit      ? SB(val, 3) : val
-        val = con.neckInPhase      ? SB(val, 4) : val
-        val = con.bridgeInPhase    ? SB(val, 5) : val
-        val = con.bridgeInParellel ? SB(val, 6) : val
-        val = con.neckInParellel   ? SB(val, 7) : val
-        newConfigArray.push(val)
+    newConfigArray.push(pickupType == 0 ? 1 : 0) // is_fluent == 1
+    for(var i=0; i<5; i++){
+
+        let con = passiveConfig[i]
+        newConfigArray.push(con.neckOn)
+        newConfigArray.push(con.bridgeOn)
+        newConfigArray.push(con.neckSplit)
+        newConfigArray.push(con.bridgeSplit)
+        newConfigArray.push(con.neckInPhase)
+        newConfigArray.push(con.bridgeInPhase)
+        newConfigArray.push(con.neckInParallel)
+        newConfigArray.push(con.bridgeInParallel)
+
+        con = fluenceConfig[i]
+        newConfigArray.push(con.neck)
+        newConfigArray.push(con.bridge)
     }
+    // for(let con of passiveConfig){
+    //     // val = con.neckOn           ? SB(val, 0) : val
+    //     // val = con.bridgeOn         ? SB(val, 1) : val
+    //     // val = con.neckSplit        ? SB(val, 2) : val
+    //     // val = con.bridgeSplit      ? SB(val, 3) : val
+    //     // val = con.neckInPhase      ? SB(val, 4) : val
+    //     // val = con.bridgeInPhase    ? SB(val, 5) : val
+    //     // val = con.bridgeInParallel ? SB(val, 6) : val
+    //     // val = con.neckInParallel   ? SB(val, 7) : val
+    // }
+    // for(let con of fluenceConfig){
+    //     // val = (con.neck << 3) | con.bridge
+    //     // newConfigArray.push(val)
+    // }
     configArray = newConfigArray
     console.log(configArray)
 }
@@ -634,9 +659,9 @@ const refresh = () => {
     
     // fluent pickups
     el = document.getElementById("neck-voice")
-    el.value = fluentConfig[selectedPreset].neck
+    el.value = fluenceConfig[selectedPreset].neck
     el = document.getElementById("bridge-voice")
-    el.value = fluentConfig[selectedPreset].bridge
+    el.value = fluenceConfig[selectedPreset].bridge
 
     // phases
     el = document.getElementById("phase-0")
@@ -646,9 +671,9 @@ const refresh = () => {
     
     //series / parellel
     el = document.getElementById("series-parellel-0")
-    !passiveConfig[selectedPreset].neckInParellel ? el.classList.add("selected") : el.classList.remove("selected")    
+    !passiveConfig[selectedPreset].neckInParallel ? el.classList.add("selected") : el.classList.remove("selected")    
     el = document.getElementById("series-parellel-1")
-    !passiveConfig[selectedPreset].bridgeInParellel ? el.classList.add("selected") : el.classList.remove("selected") 
+    !passiveConfig[selectedPreset].bridgeInParallel ? el.classList.add("selected") : el.classList.remove("selected") 
 }
 
 const load = () => {
@@ -740,11 +765,11 @@ const clickPhase = x => {
 
 const clickSeriesParallel = x => {
     if(x == 0){
-        passiveConfig[selectedPreset].neckInParellel = !passiveConfig[selectedPreset].neckInParellel
-        document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParellel ? "PARELLEL" : "SERIES"
+        passiveConfig[selectedPreset].neckInParallel = !passiveConfig[selectedPreset].neckInParallel
+        document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParallel ? "PARELLEL" : "SERIES"
     } else if (x == 1){
-        passiveConfig[selectedPreset].bridgeInParellel = !passiveConfig[selectedPreset].bridgeInParellel
-        document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParellel ? "PARELLEL" : "SERIES"
+        passiveConfig[selectedPreset].bridgeInParallel = !passiveConfig[selectedPreset].bridgeInParallel
+        document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParallel ? "PARELLEL" : "SERIES"
     }
     refresh()
 }
