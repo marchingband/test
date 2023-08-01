@@ -603,6 +603,7 @@ const buildMessageFromConfig = () => {
 const refresh = () => {
     let el
 
+    el = document.getElementById("pickup-type").value = pickupType
     el = document.getElementById("fluent-pickup-container")
     el.style.display = pickupType == 0 ? "block" : "none"
     el = document.getElementById("passive-pickup-container")
@@ -779,7 +780,7 @@ const clickSeriesParallel = x => {
 
 // window.onload=run
 window.onload=()=>{
-    // refresh()
+    refresh()
     run()
 }
 
