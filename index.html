@@ -614,14 +614,14 @@ const refresh = () => {
         if(passiveConfig[selectedPreset].neckSplit){
             if(passiveConfig[selectedPreset].neckInPhase){
                 el = document.getElementById("pickup-1")
-                el.classList.add("selected")
-                el = document.getElementById("pickup-2")
                 el.classList.remove("selected")
+                el = document.getElementById("pickup-2")
+                el.classList.add("selected")
             } else {
                 el = document.getElementById("pickup-1")
-                el.classList.remove("selected")
-                el = document.getElementById("pickup-2")
                 el.classList.add("selected")
+                el = document.getElementById("pickup-2")
+                el.classList.remove("selected")
             }
         } else {
             el = document.getElementById("pickup-1")
@@ -699,29 +699,29 @@ const clickPickup = x => {
     if(x == 0){
         if(passiveConfig[selectedPreset].neckInPhase){
             if(passiveConfig[selectedPreset].neckOn){
-                passiveConfig[selectedPreset].neckOn = !passiveConfig[selectedPreset].neckOn
-            } else {
-                passiveConfig[selectedPreset].neckOn = true
-            }
-        } else {
-            if(passiveConfig[selectedPreset].neckOn){
                 passiveConfig[selectedPreset].neckSplit = !passiveConfig[selectedPreset].neckSplit
             } else {
                 passiveConfig[selectedPreset].neckOn = !passiveConfig[selectedPreset].neckOn
+            }
+        } else {
+            if(passiveConfig[selectedPreset].neckOn){
+                passiveConfig[selectedPreset].neckOn = !passiveConfig[selectedPreset].neckOn
+            } else {
+                passiveConfig[selectedPreset].neckOn = true
             }
         }
     } else if(x == 1){
         if(passiveConfig[selectedPreset].neckInPhase){
             if(passiveConfig[selectedPreset].neckOn){
-                passiveConfig[selectedPreset].neckSplit = !passiveConfig[selectedPreset].neckSplit
-            } else {
-                passiveConfig[selectedPreset].neckOn = !passiveConfig[selectedPreset].neckOn
-            }
-        } else {
-            if(passiveConfig[selectedPreset].neckOn){
                 passiveConfig[selectedPreset].neckOn = !passiveConfig[selectedPreset].neckOn
             } else {
                 passiveConfig[selectedPreset].neckOn = true
+            }
+        } else {
+            if(passiveConfig[selectedPreset].neckOn){
+                passiveConfig[selectedPreset].neckSplit = !passiveConfig[selectedPreset].neckSplit
+            } else {
+                passiveConfig[selectedPreset].neckOn = !passiveConfig[selectedPreset].neckOn
             }
         }
     } else if(x == 2){
@@ -780,7 +780,6 @@ const clickSeriesParallel = x => {
 
 // window.onload=run
 window.onload=()=>{
-    console.log("v1.1.2")
     refresh()
     run()
 }
