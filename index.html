@@ -514,8 +514,8 @@ const onMIDISuccess = ( midi ) => {
     for (var entry of midi.outputs) {
         var output = entry[1];
         console.log( "Output port [type:'" + output.type + "'] id:'" + output.id + "' manufacturer:'" + output.manufacturer + "' name:'" + output.name + "' version:'" + output.version + "'" );
-        if(output.name == "MIDI2CVBOY"){
-        // if(output.name == "Seeeduino XIAO"){
+        // if(output.name == "MIDI2CVBOY"){
+        if(output.name == "Seeeduino XIAO"){
             console.log("found Pickup output, connecting")
             midiOutput = output
         }
@@ -523,8 +523,8 @@ const onMIDISuccess = ( midi ) => {
     for (var entry of midi.inputs) {
         var input = entry[1];
         console.log( "Input port [type:'" + input.type + "'] id:'" + input.id + "' manufacturer:'" + input.manufacturer + "' name:'" + input.name + "' version:'" + input.version + "'" );
-        if(input.name == "MIDI2CVBOY"){
-        // if(entry.name == "Seeeduino XIAO"){
+        // if(input.name == "MIDI2CVBOY"){
+        if(input.name == "Seeeduino XIAO"){
             console.log("found Pickup input, connecting")
             input.onmidimessage = onMIDIMessage
             input.onstatechange = ({ port }) => {
