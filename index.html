@@ -635,6 +635,11 @@ const refresh = () => {
         el = document.getElementById("pickup-2")
         el.classList.remove("selected")
     }
+    document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParallel ? "PARELLEL" : "SERIES"
+    document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParallel ? "PARELLEL" : "SERIES"
+    document.getElementById("phase-text-0").textContent = passiveConfig[selectedPreset].neckInPhase ? "IN PHASE" : "OUT OF PHASE"
+    document.getElementById("phase-text-1").textContent = passiveConfig[selectedPreset].bridgeInPhase ? "IN PHASE" : "OUT OF PHASE"
+
     if(passiveConfig[selectedPreset].bridgeOn){
         if(passiveConfig[selectedPreset].bridgeSplit){
             if(passiveConfig[selectedPreset].bridgeInPhase){
