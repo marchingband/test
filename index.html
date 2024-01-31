@@ -5,24 +5,6 @@
     </head>
     <body>
         <img src="logo.svg" class="logo">
-        <!-- <div class="legend">
-            <div class="dots-container">
-                <div class="phase" id="phase-0" onclick=clickPhase(0)></div>
-                <div>IN PHASE</div>
-            </div>
-            <div class="dots-container">
-                <div class="phase selected" id="phase-0" onclick=clickPhase(0)></div>
-                <div>OUT OF PHASE</div>
-            </div>
-            <div class="dots-container">
-                <div class="phase" id="phase-0" onclick=clickPhase(0)></div>
-                <div>PARELLEL</div>
-            </div>
-            <div class="dots-container">
-                <div class="phase selected" id="phase-0" onclick=clickPhase(0)></div>
-                <div>SERIES</div>
-            </div>
-        </div> -->
         <div class="sync-buttons">
             <select name="pickup-type" id="pickup-type" class="dropdown" onchange="changePickupType()">
                 <option value=0>Fluence</option>
@@ -84,13 +66,15 @@
                     </div>
                 </div>
                 <div>
+                    <select name="neck-mode" id="neck-mode" class="mode-dropdown" onchange="changeNeckMode()">
+                        <option value="0">OFF</option>
+                        <option value="1">SERIES</option>
+                        <option value="2">PARALLEL</option>
+                        <option value="3">SPLIT</option>
+                    </select>
                     <div class="dots-container">
                         <div class="phase" id="phase-0" onclick=clickPhase(0)></div>
                         <div class="dot-text" id="phase-text-0">IN PHASE</div>
-                    </div>
-                    <div class="dots-container">
-                        <div class="series-parallel" id="series-parellel-0" onclick=clickSeriesParallel(0)></div>
-                        <div class="dot-text" id="series-parellel-text-0">PARALLEL</div>
                     </div>
                 </div>
             </div>
@@ -108,13 +92,15 @@
                     </div>
                 </div>
                 <div>
+                    <select name="bridge-mode" id="bridge-mode" class="mode-dropdown" onchange="changeBridgeMode()">
+                        <option value="0">OFF</option>
+                        <option value="1">SERIES</option>
+                        <option value="2">PARALLEL</option>
+                        <option value="3">SPLIT</option>
+                    </select>
                     <div class="dots-container">
                         <div class="phase" id="phase-1" onclick=clickPhase(1)></div>
                         <div class="dot-text" id="phase-text-1">IN PHASE</div>
-                    </div>
-                    <div class="dots-container">
-                        <div class="series-parallel" id="series-parellel-1" onclick=clickSeriesParallel(1)></div>
-                        <div class="dot-text" id="series-parellel-text-1">PARALLEL</div>
                     </div>
                 </div>
             </div>
@@ -179,6 +165,17 @@
             border: 2px solid grey;
             background-color: lightgray;
             outline: none
+        }
+
+        .mode-dropdown {
+            height: 40px;
+            width: 120px;
+            padding:10px;
+            border-radius: 10px;
+            border: 2px solid grey;
+            background-color: lightgray;
+            outline: none;
+            margin-left: 40px;
         }
 
         .phase {
@@ -405,6 +402,67 @@ var configArray;
 
 const changePickupType = () => {
     pickupType = document.getElementById("pickup-type").value
+    refresh()
+}
+
+const changeNeckMode = () => {
+    const mode = document.getElementById("neck-mode").value
+    console.log(mode, typeof(mode))
+    switch(mode){
+        case "0":
+            // off
+            passiveConfig[selectedPreset].neckOn = false
+            break
+        case "1":
+            // series
+            passiveConfig[selectedPreset].neckOn = true
+            passiveConfig[selectedPreset].neckInParallel = false
+            passiveConfig[selectedPreset].neckSplit = false
+            break
+        case "2":
+            // parallel
+            passiveConfig[selectedPreset].neckOn = true
+            passiveConfig[selectedPreset].neckInParallel = true
+            passiveConfig[selectedPreset].neckSplit = false
+            break
+        case "3":
+            // split
+            passiveConfig[selectedPreset].neckOn = true
+            passiveConfig[selectedPreset].neckInParallel = false
+            passiveConfig[selectedPreset].neckSplit = true
+            break
+        default: break;
+    }
+    refresh()
+}
+
+const changeBridgeMode = () => {
+    const mode = document.getElementById("bridge-mode").value
+    switch(mode){
+        case "0":
+            // off
+            passiveConfig[selectedPreset].bridgeOn = false
+            break
+        case "1":
+            // series
+            passiveConfig[selectedPreset].bridgeOn = true
+            passiveConfig[selectedPreset].bridgeInParallel = false
+            passiveConfig[selectedPreset].bridgeSplit = false
+            break
+        case "2":
+            // parallel
+            passiveConfig[selectedPreset].bridgeOn = true
+            passiveConfig[selectedPreset].bridgeInParallel = true
+            passiveConfig[selectedPreset].bridgeSplit = false
+            break
+        case "3":
+            // split
+            passiveConfig[selectedPreset].bridgeOn = true
+            passiveConfig[selectedPreset].bridgeInParallel = false
+            passiveConfig[selectedPreset].bridgeSplit = true
+            break
+        default: break;
+    }
     refresh()
 }
 
@@ -635,10 +693,12 @@ const refresh = () => {
         el = document.getElementById("pickup-2")
         el.classList.remove("selected")
     }
-    document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParallel ? "PARELLEL" : "SERIES"
-    document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParallel ? "PARELLEL" : "SERIES"
+    // document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParallel ? "PARELLEL" : "SERIES"
+    // document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParallel ? "PARELLEL" : "SERIES"
     document.getElementById("phase-text-0").textContent = passiveConfig[selectedPreset].neckInPhase ? "IN PHASE" : "OUT OF PHASE"
     document.getElementById("phase-text-1").textContent = passiveConfig[selectedPreset].bridgeInPhase ? "IN PHASE" : "OUT OF PHASE"
+    document.getElementById("neck-mode").value = passiveConfig[selectedPreset].neckOn == false ? 0 : passiveConfig[selectedPreset].neckSplit ? 3 : passiveConfig[selectedPreset].neckInParallel ? 2 : 1
+    document.getElementById("bridge-mode").value = passiveConfig[selectedPreset].bridgeOn == false ? 0 : passiveConfig[selectedPreset].bridgeSplit ? 3 : passiveConfig[selectedPreset].bridgeInParallel ? 2 : 1
 
     if(passiveConfig[selectedPreset].bridgeOn){
         if(passiveConfig[selectedPreset].bridgeSplit){
@@ -679,10 +739,10 @@ const refresh = () => {
     !passiveConfig[selectedPreset].bridgeInPhase ? el.classList.add("selected") : el.classList.remove("selected") 
     
     //series / parellel
-    el = document.getElementById("series-parellel-0")
-    !passiveConfig[selectedPreset].neckInParallel ? el.classList.add("selected") : el.classList.remove("selected")    
-    el = document.getElementById("series-parellel-1")
-    !passiveConfig[selectedPreset].bridgeInParallel ? el.classList.add("selected") : el.classList.remove("selected") 
+    // el = document.getElementById("series-parellel-0")
+    // !passiveConfig[selectedPreset].neckInParallel ? el.classList.add("selected") : el.classList.remove("selected")    
+    // el = document.getElementById("series-parellel-1")
+    // !passiveConfig[selectedPreset].bridgeInParallel ? el.classList.add("selected") : el.classList.remove("selected") 
 }
 
 const load = () => {
@@ -772,16 +832,16 @@ const clickPhase = x => {
     refresh()
 }
 
-const clickSeriesParallel = x => {
-    if(x == 0){
-        passiveConfig[selectedPreset].neckInParallel = !passiveConfig[selectedPreset].neckInParallel
-        document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParallel ? "PARELLEL" : "SERIES"
-    } else if (x == 1){
-        passiveConfig[selectedPreset].bridgeInParallel = !passiveConfig[selectedPreset].bridgeInParallel
-        document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParallel ? "PARELLEL" : "SERIES"
-    }
-    refresh()
-}
+// const clickSeriesParallel = x => {
+//     if(x == 0){
+//         passiveConfig[selectedPreset].neckInParallel = !passiveConfig[selectedPreset].neckInParallel
+//         document.getElementById("series-parellel-text-0").textContent = passiveConfig[selectedPreset].neckInParallel ? "PARELLEL" : "SERIES"
+//     } else if (x == 1){
+//         passiveConfig[selectedPreset].bridgeInParallel = !passiveConfig[selectedPreset].bridgeInParallel
+//         document.getElementById("series-parellel-text-1").textContent = passiveConfig[selectedPreset].bridgeInParallel ? "PARELLEL" : "SERIES"
+//     }
+//     refresh()
+// }
 
 // window.onload=run
 window.onload=()=>{
@@ -790,4 +850,4 @@ window.onload=()=>{
 }
 
     </script>
-</html>
+<!-- </html> -->
